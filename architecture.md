@@ -21,6 +21,7 @@ Stores the orders with their statuses and details, has the following columns:
 - `sourceComment` - the source comment, stored as is, that came from Instagram API
   - created_time
   - text
+  - id
   - from
     - username
     - profile_picture
@@ -29,7 +30,7 @@ Stores the orders with their statuses and details, has the following columns:
 - `email` - the email extracted from comments
 - `address` - 
 - `items` - the requested items, a dictionary/hash of item color + quantity
-- `lastUpdatedDate` - last time an action has been performed on the order. Can be used to re-send emails, among other things.
+- `lastModifiedDate` - last time an action has been performed on the order. Can be used to re-send emails, among other things.
 - `state` - state of the order, can be of the following values
   1. **scraped** - just pulled down from Instagram API, with just `igMediaId|sourceComment` fields populated.
   2. **pending-details-validation** - parsed out email and ordered item from comment's text. Awaiting admin to validate the order details
