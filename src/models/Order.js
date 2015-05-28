@@ -15,12 +15,16 @@ var OrderSchema = new mongoose.Schema({
   },
   email: String,
   address: String,
-  items: {
-    'white': Number,
-    'black': Number,
-    'pink': Number,
-    'teal': Number,
-    'green': Number
+  color: {
+    type: String,
+    enum: [
+      '',
+      'white',
+      'black',
+      'pink',
+      'teal',
+      'green'  
+    ]
   },
   lastModifiedDate: Date,
   state: {
@@ -33,7 +37,10 @@ var OrderSchema = new mongoose.Schema({
       'awaiting-address-reply', // first email sent to user, now waiting for their reply with shipping address
       'shopping-cart-link-sent' // received address from user, created celery link, emailed the link back to user'
     ]
-  }
+  },
+  // temporary field used to keep track of which orders were packaged into excel
+  // and sent to the team
+  tempPackagedInExcelAndSent: Boolean
 });
 
 OrderSchema.pre('save', function(next) {

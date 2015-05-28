@@ -21,8 +21,8 @@ else {
 }
 mongoose.connect(config.mongodb.connectionString);
 
-scrapeComments();
 function scrapeComments() {
+  console.log('Scrapping comments');
   Sale.find({
     igMediaId: {
       $exists: true
@@ -38,8 +38,13 @@ function processSales(sales) {
     getComments.bind(this, sales),
     getNewComments,
     createOrders
-  ], function(err) {
-    console.dir(err);
+  ], function(err, orders) {
+    if (err) {
+      console.dir(err);
+    }
+    else {
+      console.log('Scraped %s new orders', orders.length);
+    }
   });
 }
 
@@ -53,6 +58,7 @@ function createOrders(comments, cb) {
       state: 'scraped'
     }).save();
   });
+  cb(null, comments);
 }
  
 // get comments for all the sales posts
