@@ -8,9 +8,20 @@ var config = require('../config/config.js');
 
 module.exports = scrapeComments;
 
-ig.use(config.instagram);
+if (config.instagram.access_token) {
+  ig.use({
+    access_token: config.instagram.access_token
+  })
+}
+else {
+  ig.use({
+    client_id: config.instagram.client_id,
+    client_secret: config.instagram.client_secret
+  })
+}
 mongoose.connect(config.mongodb.connectionString);
 
+scrapeComments();
 function scrapeComments() {
   Sale.find({
     igMediaId: {
@@ -18,9 +29,7 @@ function scrapeComments() {
     }
   }, function(err, sales) {
     if (err) return console.dir(err);
-
     processSales(sales);
-    sales.forEach(processSale);
   });
 }
 
@@ -35,7 +44,6 @@ function processSales(sales) {
 }
 
 function createOrders(comments, cb) {
-  console.dir('creating orders - ' + comments.length);
   comments.forEach(function(c) {
     var mediaId = c.mediaId;
     delete c.mediaId;
@@ -52,12 +60,16 @@ function getComments(sales, cb) {
   async.map(sales,
     function(sale, aCb) {
       ig.comments(sale.igMediaId, function(err, comments) {
-        if (err) return console.dir(err);
+        if (err) {
+          console.log('Failed retrieving comments for - ' + sale.igMediaId);
+          console.dir(err);
+          return aCb(null, []);
+        }
         var igComments = comments || [];
-        comments.forEach(function(c) {
+        igComments.forEach(function(c) {
           c.mediaId = sale.igMediaId;
         });
-        aCb(null, comments || []);
+        aCb(null, igComments);
       });
     },
     function(err, results) {
@@ -86,14 +98,5 @@ function getNewComments(comments, cb) {
     });
 
     cb(null, newComments);
-  });
-}
-
-function processSale(sale) {
-  // get comments for the sales post
-  ig.comments(sale.igMediaId, function(err, comments) {
-    if (err) return console.dir(err);
-
-
   });
 }

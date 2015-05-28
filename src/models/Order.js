@@ -23,7 +23,7 @@ var OrderSchema = new mongoose.Schema({
     'green': Number
   },
   lastModifiedDate: Date,
-  status: {
+  state: {
     type: String,
     enum: [
       'scraped', // just pulled down from Instagram API, with just `igMediaId|sourceComment` fields populated.
