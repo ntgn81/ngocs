@@ -14,9 +14,9 @@ module.exports = {
     }
   },
   tempEmailRecipients: [
-    // 'Alexander Hambrock <alexander@hidrate.me>',
-    // 'Nadya Nguyen <nadya@hidrate.me>',
+    'Alexander Hambrock <alexander@hidrate.me>',
+    'Nadya Nguyen <nadya@hidrate.me>',
     'Nam Nguyen <ntgn81@gmail.com>',
-    'Nam Nguyen <ntgn81.hidrate@gmail.com>'
+    'Nam Nguyen(hidrate) <ntgn81.hidrate@gmail.com>'
   ]
 };
