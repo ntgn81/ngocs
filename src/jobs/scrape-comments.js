@@ -5,6 +5,8 @@ var Sale = require('../models/Sale');
 var _ = require('lodash');
 var async = require('async');
 var config = require('../config/config.js');
+var Logger = require('../utils/Logger.js');
+var logger = new Logger('ScrapeComments');
 
 module.exports = scrapeComments;
 
@@ -19,16 +21,17 @@ else {
     client_secret: config.instagram.client_secret
   })
 }
-mongoose.connect(config.mongodb.connectionString);
 
 function scrapeComments() {
-  console.log('Scrapping comments');
+  logger.log('Start');
   Sale.find({
     igMediaId: {
       $exists: true
     }
   }, function(err, sales) {
-    if (err) return console.dir(err);
+    if (err) {
+      return logger.log('Failed getting sales in DB: %j', err);
+    }
     processSales(sales);
   });
 }
@@ -40,10 +43,10 @@ function processSales(sales) {
     createOrders
   ], function(err, orders) {
     if (err) {
-      console.dir(err);
+      logger.log('Failed getting comments: %j', err);
     }
     else {
-      console.log('Scraped %s new orders', orders.length);
+      logger.log('Scraped %s new orders', orders.length);
     }
   });
 }
@@ -67,8 +70,7 @@ function getComments(sales, cb) {
     function(sale, aCb) {
       ig.comments(sale.igMediaId, function(err, comments) {
         if (err) {
-          console.log('Failed retrieving comments for - ' + sale.igMediaId);
-          console.dir(err);
+          logger.log('Failed retrieving comments for media id=%s: %j', sale.igMediaId, err);
           return aCb(null, []);
         }
         var igComments = comments || [];
@@ -92,7 +94,7 @@ function getNewComments(comments, cb) {
     }
   }, 'sourceComment.id', function(err, orders) {
     if (err) {
-      console.dir(err);
+      logger.log('Failed getting existing orders in DB: %j', err);
       return cb(null, []);
     }
     var existingCommentIds = _.map(orders, function(o) {

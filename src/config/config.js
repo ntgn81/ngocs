@@ -6,5 +6,17 @@ module.exports = {
   },
   mongodb: {
     connectionString: 'mongodb://hidrate:hidrate@ds034878.mongolab.com:34878/iss'
-  }
+  },
+  mailgun: {
+    auth: {
+      api_key: 'key-f2a5229a4a55cb883d00ffa9474d1c11',
+      domain: 'sandbox75d02d614f93440cb9f960350cc99674.mailgun.org'
+    }
+  },
+  tempEmailRecipients: [
+    // 'Alexander Hambrock <alexander@hidrate.me>',
+    // 'Nadya Nguyen <nadya@hidrate.me>',
+    'Nam Nguyen <ntgn81@gmail.com>',
+    'Nam Nguyen <ntgn81.hidrate@gmail.com>'
+  ]
 };

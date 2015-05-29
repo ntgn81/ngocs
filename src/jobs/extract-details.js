@@ -1,3 +1,4 @@
+var util = require('util');
 var mongoose = require('mongoose');
 var ig = require('instagram-node').instagram();
 var Order = require('../models/Order');
@@ -5,19 +6,20 @@ var Sale = require('../models/Sale');
 var _ = require('lodash');
 var async = require('async');
 var config = require('../config/config.js');
+var Logger = require('../utils/Logger.js');
+var logger = new Logger('ExtractDetails');
 
 module.exports = extractDetails;
-
-mongoose.connect(config.mongodb.connectionString);
-
 function extractDetails() {
-  console.log('Extracting details');
+  logger.log('Start');
   Order.find({
     state: 'scraped'
   }, function(err, orders) {
     if (err) {
-      return console.dir(err);
+      return logger.log('Failed to retrieved scraped orders: %j', err);
     }
+    
+    logger.log('Found %s to be processed', orders.length);
     
     orders.forEach(function(o) {
       o.email = extractEmail(o.sourceComment.text);
@@ -25,11 +27,9 @@ function extractDetails() {
       o.state = o.email ? 'pending-details-validation' : 'not-valid';
       o.save(function(err) {
         if (err) {
-          console.log('Error saving');
-          console.dir(err);
+          logger.log('Error updating order: %j', err);
         }
       });
-      //console.log('%s -> %s - %s', o.sourceComment.text, o.email, o.color);
     });
   });
 }
