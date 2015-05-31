@@ -51,6 +51,11 @@ function packageAndSendCsv() {
       return;
     }
     
+    if (!res.orders.length) {
+      logger.log('No new orders');
+      return;
+    }
+    
     var igMediaIdToUser = res.sales.reduce(function(p, c) {
       p[c.igMediaId] = c.user.username;
       return p;
