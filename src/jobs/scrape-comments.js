@@ -27,6 +27,9 @@ function scrapeComments() {
   Sale.find({
     igMediaId: {
       $exists: true
+    },
+    user: {
+      $exists: true
     }
   }, function(err, sales) {
     if (err) {

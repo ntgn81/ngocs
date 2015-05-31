@@ -23,30 +23,52 @@ var transporter = nodemailer.createTransport({
 
 function packageAndSendCsv() {
   logger.log('Start');
-  Order.find({
-    email: {
-      $exists: true
-    },
-    tempPackagedInExcelAndSent: {
-      $in: [
-        null,
-        false
-      ]
-    }
-  }, function(err, orders) {
-    if (err || !orders || !orders.length) {
-      logger.log('No new orders');
+  async.parallel({
+    orders: Order.find.bind(Order, {
+      email: {
+        $exists: true
+      },
+      tempPackagedInExcelAndSent: {
+        $in: [
+          null,
+          false
+        ]
+      }
+    }),
+    sales: Sale.find.bind(Sale, {
+      user: {
+        $exists: true
+      }
+    })
+  }, function(err, res) {
+    if (err) {
+      logger.log('Error calling DB for sales/orders');
       return;
     }
-    logger.log('Found %s new orders', orders.length);
-    var csv = 'Email,Color,UserName,FullName,Comment';
-    orders.forEach(function(o) {
-        csv += util.format('\n%s,%s,"%s","%s","%s"',
-            o.email, o.color,
-            o.sourceComment.from.username.replace('"', '""'),
-            o.sourceComment.from.full_name.replace('"', '""'),
-            o.sourceComment.text.replace('"', '""'));
-    })
+    
+    if (!res.orders || !res.sales) {
+      logger.log('Empty Orders or sales');
+      return;
+    }
+    
+    var igMediaIdToUser = res.sales.reduce(function(p, c) {
+      p[c.igMediaId] = c.user.username;
+      return p;
+    }, {});
+
+    logger.log('Found %s new orders', res.orders.length);
+    var csv = 'Name,Last Name,Email,Ambassador,Stage,Post,H@andle,Color';
+    res.orders.forEach(function(o) {
+      csv += util.format('\n"%s","%s","%s","%s","%s","%s","%s","%s"',
+        '', // name
+        '', // last name
+        o.email, // email
+        '@' + igMediaIdToUser[o.igMediaId],// ambassador
+        'lead', // stage
+        '', // post
+        '@' + o.sourceComment.from.username, // H@andle
+        o.color);
+    });
     
     var mailOptions = {
         from: 'Nam Nguyen <ntgn81@gmail.com>', // sender address
@@ -57,13 +79,13 @@ function packageAndSendCsv() {
           content: csv
         }]
     };
-    
+
     // send mail with defined transport object
     transporter.sendMail(mailOptions, function(err, info){
         if(err){
           return logger.log('Error sending email: %j', err);
         }
-        orders.forEach(function(o) {
+        res.orders.forEach(function(o) {
           o.tempPackagedInExcelAndSent = true;
           o.save();
         })
