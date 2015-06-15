@@ -25,9 +25,12 @@ else {
 function populateSalesDetails() {
   logger.log('Start');
   Sale.find({
-    user: {
-      $exists: false
-    }
+    "$or": [
+      {
+        "user": { "$exists": false }
+      },
+      { "link": "" }
+    ]
   }, function(err, sales) {
     if (err) {
       return logger.log('Failed getting sales in DB: %j', err);
