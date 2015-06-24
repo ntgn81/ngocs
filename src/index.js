@@ -15,5 +15,6 @@ function start() {
   // every 5 minutes
   schedule.scheduleJob('2,7,12,17,22,27,32,37,42,47,52,57 * * * *', require('./jobs/extract-details'));
   // every 5 minutes
-  schedule.scheduleJob('4,9,14,19,24,29,34,39,44,49,55,59 * * * *', require('./jobs/temp-send-csv'));
+  //schedule.scheduleJob('4,9,14,19,24,29,34,39,44,49,55,59 * * * *', require('./jobs/temp-send-csv'));
+  schedule.scheduleJob('4,9,14,19,24,29,34,39,44,49,55,59 * * * *', require('./jobs/create-streak-boxes'));
 }

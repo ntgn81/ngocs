@@ -19,5 +19,9 @@ module.exports = {
     'Nam Nguyen <ntgn81@gmail.com>',
     'Alex <alexandra@hidrate.me>',
     'Nam Nguyen(hidrate) <ntgn81.hidrate@gmail.com>'
-  ]
+  ],
+  streak: {
+    apiKey: '6abf71081d654c50be56fc9bca336ee1',
+    pipelineKey: 'agxzfm1haWxmb29nYWVyMQsSDE9yZ2FuaXphdGlvbiIKaGlkcmF0ZS5tZQwLEghXb3JrZmxvdxiAgICAqMiICgw'
+  }
 };
