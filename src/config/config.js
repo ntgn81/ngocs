@@ -17,6 +17,7 @@ module.exports = {
     'Alexander Hambrock <alexander@hidrate.me>',
     'Nadya Nguyen <nadya@hidrate.me>',
     'Nam Nguyen <ntgn81@gmail.com>',
+    'Alex <alexandra@hidrate.me>',
     'Nam Nguyen(hidrate) <ntgn81.hidrate@gmail.com>'
   ]
 };
