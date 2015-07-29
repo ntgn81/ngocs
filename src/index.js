@@ -7,7 +7,7 @@ mongoose.connect(config.mongodb.connectionString, start);
 // return require('./jobs/extract-details')();
 // every 30 minutes
 function start() {
-  console.log('Connected to DB, starting scheduler');return require('./jobs/populate-sales-details')();
+  console.log('Connected to DB, starting scheduler');
   // every 5 minutes
   schedule.scheduleJob('0,5,10,15,20,25,30,35,40,45,50,55 * * * *', require('./jobs/scrape-comments'));
   // every 5 minutes
