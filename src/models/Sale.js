@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 
-module.exports = mongoose.model('Sale', {
+var SaleSchema = new mongoose.Schema({
   igMediaId: String,
   link: String,
   user: {
@@ -9,4 +9,8 @@ module.exports = mongoose.model('Sale', {
     id: String,
     full_name: String
   }
+}, {
+  versionKey: false
 });
+
+module.exports = mongoose.model('Sale', SaleSchema);

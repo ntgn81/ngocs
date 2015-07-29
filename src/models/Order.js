@@ -41,6 +41,8 @@ var OrderSchema = new mongoose.Schema({
   // temporary field used to keep track of which orders were packaged into excel
   // and sent to the team
   tempPackagedInExcelAndSent: Boolean
+}, {
+  versionKey: false
 });
 
 OrderSchema.pre('save', function(next) {
