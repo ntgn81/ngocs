@@ -6,7 +6,7 @@ var _ = require('lodash');
 var async = require('async');
 var config = require('../config/config.js');
 var Logger = require('../utils/Logger.js');
-var logger = new Logger('ScrapeComments')();
+var logger = new Logger('ScrapeComments');
 
 module.exports = scrapeComments;
 

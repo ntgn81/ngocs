@@ -7,7 +7,7 @@ var async = require('async');
 var config = require('../config/config.js');
 var util = require('util');
 var Logger = require('../utils/Logger.js');
-var logger = new Logger('Package&Send-CSV')();
+var logger = new Logger('Package&Send-CSV');
 var nodemailer = require('nodemailer');
 
 module.exports = packageAndSendCsv;
