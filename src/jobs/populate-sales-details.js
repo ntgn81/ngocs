@@ -70,6 +70,7 @@ function populateSaleDetails(sale) {
         }
         sale.user = igData.user;
         sale.link = igData.link;
+        sale.igMediaId = igData.id;
         sale.save();
     }
 }
