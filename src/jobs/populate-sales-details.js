@@ -27,9 +27,20 @@ function populateSalesDetails() {
   Sale.find({
     "$or": [
       {
-        "user": { "$exists": false }
+        "user": {
+          "$exists": false
+        }
       },
-      { "link": "" }
+      {
+        "link": {
+          "$in": [null,""]
+        }
+      },
+      {
+        "igMediaId": {
+          "$in": [null,""]
+        }
+      }
     ]
   }, function(err, sales) {
     if (err) {
